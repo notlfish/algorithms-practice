@@ -18,6 +18,12 @@ const listToStringH = (list) => {
   return str;
 };
 
+const remove = (index, list) => {
+  if (isEmpty(list)) throw "Can't remove an item from an empty list";
+  if (index === 0) return rest(list);
+  return cons(first(list), remove(index - 1, rest(list)));
+};
+
 const mapList = (list, func) => {
   if (isEmpty(list)) return emptyList;
   const restResult = mapList(rest(list), func);
