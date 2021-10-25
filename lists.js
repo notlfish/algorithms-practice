@@ -31,13 +31,30 @@ const mapList = (list, func) => {
   return cons(firstResult, restResult);
 };
 
+const filterList = (list, func) => {
+  if (isEmpty(list)) return emptyList;
+  const result = filterList(rest(list), func);
+  const firstResult = func(first(list));
+  if (firstResult) {
+    return cons(first(list), result);
+  } else {
+    return result;
+  }
+};
+
 const listToString = (list) => '[' + listToStringH(list) + ']';
 
-const list = cons(1, cons(2, cons(3, emptyList)));
+const list = cons(1, cons(2, cons(3, cons(-5, emptyList))));
 
 console.log(listToString(list));
 console.log(
   mapList(list, (val) => {
     return val * 10;
+  })
+);
+
+console.log(
+  filterList(list, (val) => {
+    return val > 1;
   })
 );
