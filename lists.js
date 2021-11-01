@@ -49,28 +49,12 @@ const arrayToList = (arr) => {
     return arr.reduce((acc, val) => cons(val, acc), emptyList)
 };
 
-const list = cons(1, cons(2, cons(3, cons(-5, emptyList))));
-
-console.log(listToString(list));
-console.log(
-  mapList(list, (val) => {
-    return val * 10;
-  })
-);
-
-console.log(
-  filterList(list, (val) => {
-    return val > 1;
-  })
-);
-
 const merge = (list1, list2) => {
     if (isEmpty(list1)) return list2;
     if (isEmpty(list2)) return list1;
     const [h1, h2] = [first(list1), first(list2)];
-    const resRest = merge(rest(list1), rest(list2));
-    if (h1 <= h2) return (cons(h1, cons(h2, resRest)));
-    return (cons(h2, cons(h1, resRest)));
+    if (h1 <= h2) return cons(h1, merge(rest(list1), list2));
+    return cons(h2, merge(list1, rest(list2)));
 }
 
 const splitOE = (list) => {
@@ -86,6 +70,8 @@ const mergeSort = (list) => {
     return merge(mergeSort(odd), mergeSort(even));
 }
 
-const unsorted = arrayToList([3, 1, 6, 8, 2, 5, 8]);
+const unsorted = arrayToList([3, 5, 2, 1, 8, 6, 8]);
+console.log(splitOE(unsorted).map((l) => listToString(l)));
+console.log(listToString(merge(splitOE(unsorted)[0], splitOE(unsorted)[1])));
 console.log(listToString(mergeSort(unsorted)));
 //[1, 2, 3, 5, 6, 8, 8]
