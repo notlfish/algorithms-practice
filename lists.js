@@ -44,17 +44,34 @@ const filterList = (list, func) => {
 
 const listToString = (list) => '[' + listToStringH(list) + ']';
 
-const list = cons(1, cons(2, cons(3, cons(-5, emptyList))));
+const arrayToList = (arr) => {
+    arr.reverse();
+    return arr.reduce((acc, val) => cons(val, acc), emptyList)
+};
 
-console.log(listToString(list));
-console.log(
-  mapList(list, (val) => {
-    return val * 10;
-  })
-);
+const merge = (list1, list2) => {
+    if (isEmpty(list1)) return list2;
+    if (isEmpty(list2)) return list1;
+    const [h1, h2] = [first(list1), first(list2)];
+    if (h1 <= h2) return cons(h1, merge(rest(list1), list2));
+    return cons(h2, merge(list1, rest(list2)));
+}
 
-console.log(
-  filterList(list, (val) => {
-    return val > 1;
-  })
-);
+const splitOE = (list) => {
+    if (isEmpty(list)) return [emptyList, emptyList];
+    if (isEmpty(rest(list))) return [list, emptyList];
+    const [odd, even] = splitOE(rest(rest(list)));
+    return [cons(first(list), odd), cons(first(rest(list)), even)];
+}
+
+const mergeSort = (list) => {
+    if (isEmpty(list) || isEmpty(rest(list))) return list;
+    const [odd, even] = splitOE(list);
+    return merge(mergeSort(odd), mergeSort(even));
+}
+
+const unsorted = arrayToList([3, 5, 2, 1, 8, 6, 8]);
+console.log(splitOE(unsorted).map((l) => listToString(l)));
+console.log(listToString(merge(splitOE(unsorted)[0], splitOE(unsorted)[1])));
+console.log(listToString(mergeSort(unsorted)));
+//[1, 2, 3, 5, 6, 8, 8]
